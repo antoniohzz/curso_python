@@ -1,21 +1,43 @@
 '''
-Funciones auxiliares para el programa "linea"
+Archivo con todas las funciones necesarias para la aplicación "linea"
 '''
-
-def calcular_y(x,m,b):
+ 
+import matplotlib.pyplot as plt
+ 
+def calcular_y(x:float, m:float, b:float)->float:
     '''
-        Calcula "y" de acuerdo a la pendiente "m" y el punto de intersección en y "b"
-        Retorna el valor de "y" 
+    Calcula el valor de y en una línea recta
+    x: valor de x
+    m: pendiente
+    b: intersección en y
+    regresa el valor de y
     '''
-
-    return m*x+b
-
-if __name__ == "__main__":
-    x = 0
-    m = 3
-    b = 2
-    y = calcular_y(x,m,b)
-    if y== 2:
-        print("Prueba exitosa")
+    return (m*x)+b
+ 
+def grafica_linea(X: list, Y: list, m:float, b:float):
+    '''
+    Grafica una línea recta
+    X: lista de los valores de x
+    Y: Lista de valores de y
+    m: pendiente
+    b: intersección en y
+    '''
+    plt.plot(X,Y)
+    plt.title(f"Línea recta con pendiente = {m} e intersección en y = {b}")
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.grid()
+    plt.show()
+ 
+def test_linea():
+    '''
+    Comprobamos calcular_y()
+    '''
+    y  = calcular_y(0.0, 2.0, 3.0)
+    return y
+ 
+if __name__ == '__main__':
+    if test_linea() == 3.0:
+        print('Test exitoso')
     else:
-        print("Prueba fallida")
+        print('Test fallido')
