@@ -2,7 +2,7 @@
 tablero.py: Dibuja el tablero del juego del gato
 '''
 import random
- 
+
 def dibuja_tablero(simbolos:dict):
     '''  Dibuja el tablero del juego de el gato '''
     print(f'''
@@ -12,7 +12,7 @@ def dibuja_tablero(simbolos:dict):
     ---------
     {simbolos['7']} | {simbolos['8']} | {simbolos['9']}
     ''')
- 
+
 def ia(simbolos:dict):
     ''' Estrategia de la computadora'''
     ocupado = True
@@ -21,7 +21,7 @@ def ia(simbolos:dict):
         if simbolos[x] not in ['X','O']:
             simbolos[x] = 'O'
             ocupado = False
- 
+
 def usuario(simbolos:dict):
     ''' Estrategia del usuario '''
     ocupado = True
@@ -36,9 +36,9 @@ def usuario(simbolos:dict):
                 print('Esa casilla ya está ocupada')
         else:
             print('Elija un número del 1 al 9')
- 
+
 def juego(simbolos:dict):
-    ''' Juego del gato '''
+    ''' Juego del gato ''' 
     lista_combinaciones = [
         ['1','2','3'],
         ['4','5','6'],
@@ -75,38 +75,41 @@ def juego(simbolos:dict):
             en_juego = False
             continue
     return gana
- 
+
 def checa_winner(simbolos:dict, combinaciones:list):
     ''' Checa si hay un ganador '''
     for c in combinaciones:
         if simbolos[c[0]] == simbolos[c[1]] == simbolos[c[2]]:
             return simbolos[c[0]]
     return None
- 
-def actualiza_score(score:dict, ganador:str):
+
+def actualiza_score(score:dict,ganador:str):
     ''' Actualiza el score '''
     X = score["X"]
     O = score["O"]
     if ganador is not None:
-            print(f'El ganador es {g}')
-            if ganador == 'X':
-                X["G"] += 1
-                O["P"] += 1
-            elif ganador == 'O':
-                O["G"] += 1
-                X["P"] += 1
+        print(f'El ganador es {ganador}')
+        if ganador == 'X':
+            X["G"] += 1
+            O["P"] += 1
+        elif ganador == 'O':
+            O["G"] += 1
+            X["P"] += 1
+        else:
+            X["E"] += 1
+            O["E"] += 1
     else:
         print('Empate')
         X["E"] += 1
         O["E"] += 1
- 
+
 def despliega_tablero(score:dict):
-    ''' Despliega el score '''
+    ''' Despliega el tablero de score '''
     print(f'''
     X | G: {score["X"]["G"]} | P: {score["X"]["P"]} | E: {score["X"]["E"]}
     O | G: {score["O"]["G"]} | P: {score["O"]["P"]} | E: {score["O"]["E"]}
     ''')
- 
+
 if __name__ == '__main__':
     numeros = [str(i) for i in range(1,10)]
     dsimbolos = {x:x for x in numeros}
@@ -121,7 +124,7 @@ if __name__ == '__main__':
     dibuja_tablero(dsimbolos)
     usuario(dsimbolos)
     dibuja_tablero(dsimbolos)
-   
+    
     x = random.choice(numeros)
     numeros.remove(x)
     dsimbolos[x] = 'X'
@@ -132,4 +135,3 @@ if __name__ == '__main__':
     dibuja_tablero(dsimbolos)
     print(numeros)
     '''
- 
