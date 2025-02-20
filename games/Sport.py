@@ -54,3 +54,7 @@ if __name__ == "__main__":
         json.dump(sports_json, file, indent=4)
     # Leemos el archivo JSON
     sport_list_json = []
+    with open(archivo_json, "r") as file:
+        sport_list_json = json.load(file)
+    print(sport_list_json)
+    print(repr(sport_list_json[0]))
