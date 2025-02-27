@@ -30,7 +30,12 @@ def main(archivo_torneo:str):
         for local in equipos:
             for visitante in equipos:
                 if local != visitante:
-                    d[juego.to_json()['A']['name']] = juego.to_json()
+                    juego = Game(local, visitante)
+                    partido = f'{local} - {visitante}'
+                    partido_2 = f'{visitante} - {local}'
+                    if partido not in d and partido_2 not in d:
+                        d[partido] = juego.to_json()
+        #print(d.keys())
         torneo = list(d.values())
         #juego = Game(mexico, españa)
         #torneo = [juego.to_json()]
@@ -45,10 +50,10 @@ def main(archivo_torneo:str):
         game = Game(A, B)
         game.play()
         print(game)
-        print("----------------")
+        print("------------------------------------")
 
 if __name__ == "__main__":
-    archivo_torneo = ""
-    main(archivo_torneo)
+    archivo = ""
+    main(archivo)
 
 
