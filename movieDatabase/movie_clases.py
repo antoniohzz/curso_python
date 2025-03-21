@@ -72,7 +72,7 @@ class User:
         self.username        = username
         self.nombre_completo = nombre_completo
         self.email           = email
-        self.password        = self.hash_password(password)
+        self.password        = password
     
     def hash_password(self,password):
         '''Metodo para encriptar la contraseña'''
@@ -135,13 +135,37 @@ class SistemaCine:
         ids_actores = [relacion.id_estrella for relacion in self.relaciones.values() if relacion.id_pelicula == id_pelicula]
         return [self.actores[id_estrella] for id_estrella in ids_actores]
 
+    def guardar_csv(self, archivo, objetos):
+        if not objetos:
+            return
+        with open(archivo, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.DictWriter(f, fieldnames=next(iter(objetos.values())).to_dict().keys())
+            writer.writeheader()
+            for obj in objetos.values():
+                writer.writerow(obj.to_dict())
+    
+    def login(self, username, password):
+        user = self.usuarios.get(username)
+        if user and user.password == user.encrypt_hash_password(password):
+            self.usuario_actual = user
+            return True
+        return False
+ 
+    def agregar_actor(self, nombre, fecha_nacimiento, ciudad_nacimiento, url_imagen):
+        if self.usuario_actual:
+            new_id = self.idx_actor + 1
+            self.idx_actor = new_id
+            actor = Actor(new_id, nombre, fecha_nacimiento, ciudad_nacimiento, url_imagen, self.usuario_actual.username)
+            self.actores[actor.id_estrella] = actor
+
 
 if __name__ == '__main__':
     sistema = SistemaCine()
-    sistema.cargar_csv('actores.csv', Actor)
-    sistema.cargar_csv('peliculas.csv', Pelicula)
-    sistema.cargar_csv('relacion.csv', Relacion)
-    sistema.cargar_csv('users.csv', User)
+    sistema.cargar_csv('datos/actores.csv', Actor)
+    sistema.cargar_csv('datos/peliculas.csv', Pelicula)
+    sistema.cargar_csv('datos/relacion.csv', Relacion)
+    sistema.cargar_csv('datos/users.csv', User)
+    sistema.cargar_csv('datos/movies_db - users_hashed.csv', User)
     lista_peliculas = sistema.obtener_peliculas_por_actor(1)
     for pelicula in lista_peliculas:
         print(f"{pelicula.id_pelicula}:{pelicula.titulo_pelicula} ({pelicula.fecha_lanzamiento.year})")
@@ -152,12 +176,18 @@ if __name__ == '__main__':
     
     print("-----------------------------------------------")
     
+    #for u in sistema.usuarios.values():
+    #    u.password = u.hash_password(u.password)
+    #archivo_hashed = 'datos/movies_db - users_hashed.csv'
+    #sistema.guardar_csv(archivo_hashed, sistema.usuarios)
+    #print(f"Archivo {archivo_hashed} guardado")
+
     u = sistema.usuarios['toño']
     print(u.username)
     print(u.nombre_completo)
-    print(u.email)
-    print(u.password)
-    print(f'password: {u.hash_password(u.password)}')
-    
+    exito = sistema.login('toño','12345')
+    print(exito)
+    if exito:
+        sistema.agregar_actor('Wesley snipes', '1962-07-31', 'Orlando,m Florida, USA', 'https://upload.wikimedia.org/wikipedia/commons/4/46/Wesleysnipes_cropped_2009.jpg' )
     print("")
     print("Listo!")
